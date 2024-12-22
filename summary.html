@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Idea Summary</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar"></nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <h1>Business Idea Summary</h1>
+                
+                <div class="summary">
+                    This is a complete summary of your business idea development journey. You can print this summary or use it as a reference for your pitch.
+                </div>
+
+                <div class="no-print">
+                    <button onclick="window.print()" class="print-btn">Print Summary</button>
+                    <button onclick="clearAllData()" class="print-btn" style="background-color: #dc2626;">Clear All Data</button>
+                </div>
+
+                <div id="summary-content">
+                    <div class="summary-section loading">Loading summary...</div>
+                </div>
+
+                <div class="navigation no-print">
+                    <a href="step8.html" class="btn">← Back</a>
+                    <a href="index.html" class="btn">Return Home</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function formatField(key, value) {
+            if (!value) return '';
+            return `
+                <div class="field-content">
+                    <h4>${key}:</h4>
+                    <div class="field-value">${value.replace(/\n/g, '<br>')}</div>
+                </div>
+            `;
+        }
+
+        function loadAllFormData() {
+            const summaryContent = document.getElementById('summary-content');
+            const forms = {
+                'step1-form': {
+                    title: '1. Problem Identification',
+                    fields: {
+                        'problem-statement': 'Problem Statement',
+                        'daily-problems': 'Identified Problems',
+                        'selected-problem': 'Selected Problem'
+                    }
+                },
+                'step2-form': {
+                    title: '2. Business Idea',
+                    fields: {
+                        'solution-ideas': 'Potential Solutions',
+                        'pros-cons': 'Pros and Cons Analysis',
+                        'final-idea': 'Selected Business Idea'
+                    }
+                },
+                'step3-form': {
+                    title: '3. Customer Analysis',
+                    fields: {
+                        'target-audience': 'Target Audience',
+                        'customer-persona': 'Customer Persona',
+                        'interview-notes': 'Interview Notes'
+                    }
+                },
+                'step4-form': {
+                    title: '4. Value Proposition',
+                    fields: {
+                        'uvp-statement': 'Value Proposition Statement',
+                        'competition': 'Competitive Analysis',
+                        'advantages': 'Key Advantages'
+                    }
+                },
+                'step5-form': {
+                    title: '5. Solution Testing',
+                    fields: {
+                        'mvp-description': 'MVP Description',
+                        'testing-plan': 'Testing Plan',
+                        'test-results': 'Test Results',
+                        'improvements': 'Planned Improvements'
+                    }
+                },
+                'step6-form': {
+                    title: '6. Business Plan',
+                    fields: {
+                        'customer-segment': 'Customer Segment',
+                        'marketing-plan': 'Marketing Strategy',
+                        'pricing-strategy': 'Pricing Strategy',
+                        'resources': 'Required Resources',
+                        'timeline': 'Timeline'
+                    }
+                },
+                'step7-form': {
+                    title: '7. Pitch Development',
+                    fields: {
+                        'pitch-problem': 'Problem Statement',
+                        'pitch-solution': 'Solution',
+                        'pitch-value': 'Unique Value',
+                        'pitch-progress': 'Current Progress',
+                        'pitch-future': 'Future Plans',
+                        'practice-feedback': 'Practice Feedback'
+                    }
+                },
+                'step8-form': {
+                    title: '8. Pitch Delivery',
+                    fields: {
+                        'pitch-checklist': 'Pre-pitch Checklist',
+                        'common-questions': 'Common Questions',
+                        'pitch-notes': 'Pitch Day Notes',
+                        'follow-up': 'Follow-up Actions'
+                    }
+                }
+            };
+
+            let summaryHTML = '';
+            let hasData = false;
+
+            Object.entries(forms).forEach(([formId, formConfig]) => {
+                const savedData = localStorage.getItem(formId);
+                if (savedData) {
+                    const formData = JSON.parse(savedData);
+                    let sectionContent = '';
+                    
+                    Object.entries(formConfig.fields).forEach(([fieldId, fieldLabel]) => {
+                        if (formData[fieldId]) {
+                            sectionContent += formatField(fieldLabel, formData[fieldId]);
+                            hasData = true;
+                        }
+                    });
+
+                    if (sectionContent) {
+                        summaryHTML += `
+                            <div class="summary-section">
+                                <h2>${formConfig.title}</h2>
+                                ${sectionContent}
+                            </div>
+                        `;
+                    }
+                }
+            });
+
+            if (!hasData) {
+                summaryHTML = `
+                    <div class="summary-section">
+                        <p>No data has been entered yet. Go through each step to build your business idea summary.</p>
+                    </div>
+                `;
+            }
+
+            summaryContent.innerHTML = summaryHTML;
+        }
+
+        // Load summary when page loads
+        document.addEventListener('DOMContentLoaded', loadAllFormData);
+    </script>
+
+    <style>
+        .field-content {
+            margin: 16px 0;
+            padding-left: 16px;
+        }
+        .field-content h4 {
+            color: #4b5563;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .field-value {
+            white-space: pre-line;
+            line-height: 1.6;
+        }
+        .loading {
+            color: #6b7280;
+            font-style: italic;
+        }
+    </style>
+</body>
+</html>
